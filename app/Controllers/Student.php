@@ -36,7 +36,7 @@ class Student extends BaseController
     public function showAll()
     {
         $studentModel = new StudentModel();
-        $students = $studentModel->select('id, name, email, photo, phone, address, role')->findAll();
+        $students = $studentModel->findAll();
 
         foreach ($students as $key => $student) {
             $students[$key]['photo'] = $this->get_photo_url($student);

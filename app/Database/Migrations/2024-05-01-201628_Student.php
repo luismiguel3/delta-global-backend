@@ -62,11 +62,11 @@ class Student extends Migration
         ]);
         $this->forge->addPrimaryKey('id');
         $this->forge->addUniqueKey('email');
-        $this->forge->createTable('users');
+        $this->forge->createTable('student');
     }
 
     public function down()
     {
-        $this->forge->dropTable('users');
+        $this->forge->dropTable('student');
     }
 }
