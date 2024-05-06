@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class UserModel extends Model
+class StudentModel extends Model
 {
     protected $table = 'users';
     protected $primaryKey = 'id';
@@ -31,7 +31,7 @@ class UserModel extends Model
     protected $validationRules = [
         'name' => 'required',
         'email' => 'required|valid_email',
-        'password'=> 'required',
+        'password' => 'required',
         'role' => 'required|in_list[admin,user]',
     ];
     protected $validationMessages = [
