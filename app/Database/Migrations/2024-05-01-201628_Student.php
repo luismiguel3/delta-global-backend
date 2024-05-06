@@ -5,7 +5,7 @@ namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
 use CodeIgniter\Database\RawSql;
 
-class Users extends Migration
+class Student extends Migration
 {
     public function up()
     {
@@ -16,15 +16,35 @@ class Users extends Migration
                 'unsigned' => true,
                 'auto_increment' => true
             ],
+            'name' => [
+                'type' => 'VARCHAR',
+                'constraint' => '100',
+            ],
             'email' => [
                 'type' => 'VARCHAR',
                 'constraint' => '100',
             ],
-            'password' => [
+            'photo' => [
                 'type' => 'VARCHAR',
                 'constraint' => '255',
+                'null' => true
             ],
-            'remember_me_token' => [
+            'phone' => [
+                'type' => 'VARCHAR',
+                'constraint' => '20',
+                'null' => true
+            ],
+            'address' => [
+                'type' => 'VARCHAR',
+                'constraint' => '255',
+                'null' => true
+            ],
+            'institution' => [
+                'type' => 'VARCHAR',
+                'constraint' => '255',
+                'null' => true
+            ],
+            'course' => [
                 'type' => 'VARCHAR',
                 'constraint' => '255',
                 'null' => true

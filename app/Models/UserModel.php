@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class StudentModel extends Model
+class UserModel extends Model
 {
     protected $table = 'users';
     protected $primaryKey = 'id';
@@ -12,7 +12,7 @@ class StudentModel extends Model
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ["id", "name", "email", "phone", "address", "photo", "institution", "course"];
+    protected $allowedFields = ["id", "email", "password", "remember_me_token"];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -29,16 +29,16 @@ class StudentModel extends Model
 
     // Validation
     protected $validationRules = [
-        'name' => 'required',
         'email' => 'required|valid_email',
+        'password' => 'required',
     ];
     protected $validationMessages = [
-        'name' => [
-            'required' => 'Nome é obrigatório'
-        ],
         'email' => [
             'required' => 'Email é obrigatório',
             'valid_email' => 'Email não é válido'
+        ],
+        'password' => [
+            'required' => 'Senha é obrigatória'
         ],
     ];
     protected $skipValidation = false;

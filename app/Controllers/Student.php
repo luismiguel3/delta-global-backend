@@ -3,21 +3,22 @@
 namespace App\Controllers;
 
 use App\Models\StudentModel;
+use App\Models\UserModel;
 
 class Student extends BaseController
 {
     private function is_admin()
     {
-        $studentModel = new StudentModel();
+        $userModel = new UserModel();
 
         if (!$this->request->hasHeader('Authorization'))
             return false;
 
 
         $token = $this->request->getHeader('Authorization')->getValue();
-        $student = $studentModel->where('remember_me_token', $token)->first();
+        $user = $userModel->where('remember_me_token', $token)->first();
 
-        return $student && $student['role'] === 'admin';
+        return $user;
     }
     
     private function get_photo_url($student)
@@ -64,7 +65,7 @@ class Student extends BaseController
             return $this->response->setJSON(['message' => 'Email já cadastrado'])->setStatusCode(400);
         }
 
-        $body->password = password_hash($body->password, PASSWORD_DEFAULT);
+        //$body->password = password_hash($body->password, PASSWORD_DEFAULT);
         $studentModel->insert($body);
 
         $id = $studentModel->getInsertID();
@@ -80,7 +81,7 @@ class Student extends BaseController
     public function show($id)
     {
         $studentModel = new StudentModel();
-        $student = $studentModel->select('id, name, email, photo, phone, address, role')->find($id);
+        $student = $studentModel->select('id, name, email, photo, phone, address')->find($id);
 
         if (!$student) {
             return $this->response->setJSON(['message' => 'Usuário não encontrado'])->setStatusCode(404);
