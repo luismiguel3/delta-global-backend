@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\CLI\CLI;
 
 use App\Models\UserModel;
 
