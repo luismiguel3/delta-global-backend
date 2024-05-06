@@ -11,6 +11,7 @@ class User extends BaseController
     private function is_admin()
     {
         $userModel = new UserModel();
+
         if (!$this->request->hasHeader('Authorization'))
             return false;
 
@@ -18,13 +19,28 @@ class User extends BaseController
         $token = $this->request->getHeader('Authorization')->getValue();
         $user = $userModel->where('remember_me_token', $token)->first();
 
-        return $user['role'] === 'admin';
+        return $user && $user['role'] === 'admin';
+    }
+    private function get_photo_url($user)
+    {
+        $base_url = $this->request->getServer('HTTP_HOST');
+        if ($user['photo']) {
+            return [
+                'image' => 'http://' . $base_url . '/image/' . $user['id'],
+                'name' => $user['photo']
+            ];
+        }
+        return null;
     }
 
     public function showAll()
     {
         $userModel = new UserModel();
         $users = $userModel->select('id, name, email, photo, phone, address, role')->findAll();
+
+        foreach ($users as $key => $user) {
+            $users[$key]['photo'] = $this->get_photo_url($user);
+        }
 
         return $this->response->setJSON($users);
     }
@@ -37,7 +53,6 @@ class User extends BaseController
         $validator = \Config\Services::validation();
 
         $is_valid = $this->validate($userModel->validationRules, $userModel->validationMessages);
-
         if (!$is_valid) {
             return $this->response->setJSON($validator->getErrors())->setStatusCode(400);
         }
@@ -51,11 +66,15 @@ class User extends BaseController
         }
 
         $body->password = password_hash($body->password, PASSWORD_DEFAULT);
-
-
         $userModel->insert($body);
 
-        return $this->response->setJSON(['message' => 'usuário criado com sucesso'])->setStatusCode(201);
+        $id = $userModel->getInsertID();
+
+        return $this->response->setJSON([
+            'message' => 'usuário criado com sucesso',
+            'id' => $id,
+
+        ])->setStatusCode(200);
 
     }
 
@@ -67,8 +86,12 @@ class User extends BaseController
         if (!$user) {
             return $this->response->setJSON(['message' => 'Usuário não encontrado'])->setStatusCode(404);
         }
+        $data = [
+            ...$user,
+            'photo' => $this->get_photo_url($user)
+        ];
 
-        return $this->response->setJSON($user);
+        return $this->response->setJSON($data);
     }
     public function edit($id)
     {

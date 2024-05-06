@@ -24,12 +24,31 @@ class UserImage extends BaseController
       delete_files('uploads/' . $user['photo']);
     }
 
-    $imageName = $image->getRandomName();
-    $image->move("uploads/" . $imageName);
+    $imageName = $image->getName();
 
+    $image->move(WRITEPATH . 'uploads/', $imageName, true);
+    
     $user['photo'] = $imageName;
     $userModel->save($user);
 
     return $this->response->setJSON(['message' => 'Imagem enviada com sucesso'])->setStatusCode(201);
+  }
+
+  public function show($id)
+  {
+    $userModel = new UserModel();
+    $user = $userModel->find($id);
+
+    if (!$user) {
+      return $this->response->setJSON(['message' => 'Usuário não encontrado'])->setStatusCode(404);
+    }
+    $path = WRITEPATH . 'uploads/' . $user['photo'];
+
+    if (file_exists($path)) {
+      $mime = mime_content_type($path);
+      header('Content-Type: ' . $mime);
+      readfile($path);
+      exit;
+    }
   }
 }
