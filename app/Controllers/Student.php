@@ -7,7 +7,7 @@ use App\Models\UserModel;
 
 class Student extends BaseController
 {
-    private function is_admin()
+    private function is_logged()
     {
         $userModel = new UserModel();
 
@@ -57,7 +57,7 @@ class Student extends BaseController
             return $this->response->setJSON($validator->getErrors())->setStatusCode(400);
         }
 
-        if (!$this->is_admin()) {
+        if (!$this->is_logged()) {
             return $this->response->setJSON(['message' => 'Você não tem permissão para criar um usuário'])->setStatusCode(403);
         }
 
@@ -103,7 +103,7 @@ class Student extends BaseController
             return $this->response->setJSON(['message' => 'Usuário não encontrado'])->setStatusCode(404);
         }
 
-        if (!$this->is_admin()) {
+        if (!$this->is_logged()) {
             return $this->response->setJSON(['message' => 'Você não tem permissão para editar este usuário'])->setStatusCode(403);
         }
 
@@ -128,7 +128,7 @@ class Student extends BaseController
             return $this->response->setJSON(['message' => 'Usuário não encontrado'])->setStatusCode(404);
         }
 
-        if (!$this->is_admin()) {
+        if (!$this->is_logged()) {
             return $this->response->setJSON(['message' => 'Você não tem permissão para deletar este usuário'])->setStatusCode(403);
         }
 

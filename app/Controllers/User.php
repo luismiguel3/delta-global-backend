@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Models\StudentModel;
 use App\Models\UserModel;
 
 class User extends BaseController
@@ -10,11 +9,11 @@ class User extends BaseController
 
   public function showAll()
   {
-    $studentModel = new UserModel();
-    $students = $studentModel->findAll();
+    $userModel = new UserModel();
+    $user = $userModel->findAll();
 
 
-    return $this->response->setJSON($students);
+    return $this->response->setJSON($user);
   }
 
   public function create()
