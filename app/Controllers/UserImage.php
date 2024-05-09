@@ -2,13 +2,13 @@
 
 namespace App\Controllers;
 
-use App\Models\UserModel;
+use App\Models\StudentModel;
 
 class UserImage extends BaseController
 {
   public function create($id)
   {
-    $userModel = new UserModel();
+    $userModel = new StudentModel();
     $image = $this->request->getFile('image');
     $user = $userModel->find($id);
 
@@ -36,7 +36,7 @@ class UserImage extends BaseController
 
   public function show($id)
   {
-    $userModel = new UserModel();
+    $userModel = new StudentModel();
     $user = $userModel->find($id);
 
     if (!$user) {
