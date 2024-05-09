@@ -20,7 +20,7 @@ class Student extends BaseController
 
         return $user;
     }
-    
+
     private function get_photo_url($student)
     {
         $base_url = $this->request->getServer('HTTP_HOST');
@@ -64,8 +64,6 @@ class Student extends BaseController
         if ($studentModel->where('email', $body->email)->first()) {
             return $this->response->setJSON(['message' => 'Email já cadastrado'])->setStatusCode(400);
         }
-
-        //$body->password = password_hash($body->password, PASSWORD_DEFAULT);
         $studentModel->insert($body);
 
         $id = $studentModel->getInsertID();
@@ -81,19 +79,20 @@ class Student extends BaseController
     public function show($id)
     {
         $studentModel = new StudentModel();
-        $student = $studentModel->select('id, name, email, photo, phone, address')->find($id);
+        $student = $studentModel->select('id, name, email, photo, phone, address, course, institution, created_at')->find($id);
 
         if (!$student) {
             return $this->response->setJSON(['message' => 'Usuário não encontrado'])->setStatusCode(404);
         }
         $data = [
             ...$student,
-            'photo' => $this->get_photo_url($student)
+            'photo' => $this->get_photo_url($student),
+            'created_at' => date('d/m/Y \à\s H:i', strtotime($student['created_at'])),
         ];
 
         return $this->response->setJSON($data);
     }
-    
+
     public function edit($id)
     {
         $studentModel = new StudentModel();
@@ -114,7 +113,10 @@ class Student extends BaseController
             return $this->response->setJSON($studentModel->errors())->setStatusCode(400);
         }
 
-        return $this->response->setJSON(['message' => 'Usuário atualizado com sucesso'])->setStatusCode(200);
+        return $this->response->setJSON([
+            'message' => 'Usuário atualizado com sucesso',
+            "id" => $id
+        ])->setStatusCode(200);
     }
 
     public function delete($id)
